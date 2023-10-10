@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import PokeListItem from "../components/PokeListItem";
 import { Box, Grid } from "@mui/material";
+import { Theme, styled } from "@mui/system";
 
 type IProps = {
   loading: boolean;
@@ -11,56 +12,36 @@ type IProps = {
   updateAllData: Function;
 };
 const MPokeList = (props: IProps) => {
-  const { loading, reachedEnd, setLoading, setReachedEnd, updateAllData } =
-    props;
+  const { loading, setLoading, updateAllData } = props;
   const pokemons = useSelector((state: any) => state.Pokemons);
   const containerRef = useRef<any>(null);
+  const Container = styled("div")(({ theme }) => ({
+    padding: "3% 5%",
+    [theme.breakpoints.down("md")]: {
+      padding: "3% 32px",
+    },
+  }));
 
-  useEffect(() => {
-    const container = containerRef.current;
+  const handleScroll = () => {
+    if (loading) {
+      return;
+    }
 
-    const handleScroll = () => {
-      if (reachedEnd || loading) {
-        return;
-      }
-      const isAtBottom: boolean =
-        container.scrollTop + container.clientHeight + 10 >=
-        container.scrollHeight;
+    setLoading(true);
 
-      if (isAtBottom) {
-        setLoading(true);
-
-        // Fetch more data using the fetchMoreData function
-        updateAllData(pokemons?.length, 16)
-          .then(() => {
-            // Set loading state and handle reaching the end
-            setLoading(false);
-            if (pokemons?.length >= 70) {
-              setReachedEnd(true);
-            }
-          })
-          .catch((error: any) => {
-            console.error("Error fetching more data:", error);
-            setLoading(false);
-          });
-      }
-    };
-
-    // Attach a scroll event listener to implement infinite scroll
-    container.addEventListener("scroll", handleScroll);
-    return () => {
-      container.removeEventListener("scroll", handleScroll);
-    };
-  }, [pokemons, reachedEnd, loading]);
-
+    // Fetch more data using the fetchMoreData function
+    updateAllData(pokemons?.length, 16)
+      .then(() => {
+        // Set loading state and handle reaching the end
+        setLoading(false);
+      })
+      .catch((error: any) => {
+        console.error("Error fetching more data:", error);
+        setLoading(false);
+      });
+  };
   return (
-    <div
-      style={{
-        overflowY: "scroll",
-        height: "90vh",
-      }}
-      ref={containerRef}
-    >
+    <Container ref={containerRef}>
       <Grid container spacing={2}>
         {pokemons.map((pokemon: any, index: number) => {
           return (
@@ -70,8 +51,14 @@ const MPokeList = (props: IProps) => {
           );
         })}
       </Grid>
-      {loading && <>...loading</>}
-    </div>
+      <button
+        onClick={() => {
+          handleScroll();
+        }}
+      >
+        update
+      </button>
+    </Container>
   );
 };
 
