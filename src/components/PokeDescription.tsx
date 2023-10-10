@@ -7,6 +7,8 @@ import {
   Grid,
   IconButton,
   LinearProgress,
+  Skeleton,
+  useMediaQuery,
 } from "@mui/material";
 import { darken, styled, useTheme } from "@mui/system";
 import React, { useState } from "react";
@@ -30,6 +32,9 @@ const MainImg = styled("img")(({ theme }) => ({
   margin: "2vh 2vw",
   backgroundColor: darken(theme?.palette?.primary.dark, 0.1),
   borderRadius: "50%",
+  [theme.breakpoints.down("lg")]: {
+    width: "100%",
+  },
 }));
 
 const Chip = styled("div")(({ theme }) => ({
@@ -44,10 +49,18 @@ const Chip = styled("div")(({ theme }) => ({
   letterSpacing: 0.1,
   position: "absolute",
   bottom: "-0.2vh",
+  [theme.breakpoints.down("lg")]: {
+    width: "fit-content",
+    textTransform: "uppercase",
+    fontWeight: 600,
+  },
 }));
 const MainImgXS = styled("img")(({ theme }) => ({
   backgroundColor: "#F2F2F2",
   borderRadius: "50%",
+  [theme.breakpoints.down("lg")]: {
+    width: "50%",
+  },
 }));
 
 const ChipXS = styled("div")(({ theme }) => ({
@@ -92,6 +105,9 @@ const EvolutionIndex = styled("div")(({ theme }) => ({
   position: "absolute",
   top: "4px",
   left: "12px",
+  [theme.breakpoints.down("lg")]: {
+    left: "28%",
+  },
 }));
 const PokeDescription = (props: IProps) => {
   const { data } = props;
@@ -99,8 +115,9 @@ const PokeDescription = (props: IProps) => {
     open: false,
     selected: null,
   });
-  const navigate = useNavigate();
   const theme = useTheme();
+  const navigate = useNavigate();
+  const mobile = useMediaQuery(theme.breakpoints.down("lg"));
 
   return (
     <>
@@ -117,12 +134,15 @@ const PokeDescription = (props: IProps) => {
               src={data?.sprites?.front_default}
               alt={`${data?.name}-front`}
             />
+
             <Chip>
-              #
-              {(data?.id).toLocaleString("en-US", {
+              {mobile
+                ? data?.name
+                : `#
+              ${(data?.id).toLocaleString("en-US", {
                 minimumIntegerDigits: 4,
                 useGrouping: false,
-              })}
+              })}`}
             </Chip>
           </DivFlex>
           <DivFlex
@@ -131,10 +151,13 @@ const PokeDescription = (props: IProps) => {
             <Card>
               <CardContent sx={{ padding: "24px" }}>
                 <Title
-                  style={{
+                  sx={{
                     textTransform: "uppercase",
                     fontSize: "32px",
                     marginTop: 0,
+                    [theme?.breakpoints?.down("lg")]: {
+                      textAlign: "center",
+                    },
                   }}
                 >
                   Evolution
@@ -157,6 +180,9 @@ const PokeDescription = (props: IProps) => {
                           alignItems: "center",
                           cursor: "pointer",
                           marginBottom: "24px",
+                          [theme.breakpoints.down("lg")]: {
+                            marginBottom: "32px",
+                          },
                         }}
                       >
                         <EvolutionIndex>{index + 1}&#186; </EvolutionIndex>
@@ -179,71 +205,93 @@ const PokeDescription = (props: IProps) => {
             <Card>
               <CardContent sx={{ padding: "24px" }}>
                 <Title
-                  style={{
+                  sx={{
                     textTransform: "uppercase",
                     fontSize: "32px",
                     marginTop: 0,
+                    [theme?.breakpoints?.down("lg")]: {
+                      textAlign: "center",
+                    },
                   }}
                 >
                   Gallery
                 </Title>
-                <Grid container spacing={1}>
-                  {Object.keys(data?.sprites)?.map(
-                    (elem: any, index: number) => {
-                      return (
-                        data?.sprites[elem] &&
-                        elem !== "other" &&
-                        elem !== "versions" && (
-                          <Grid
-                            item
-                            lg={3}
-                            key={index}
-                            sx={{
-                              position: "relative",
-                            }}
-                          >
-                            <OpenInFullRounded
-                              htmlColor="#C1C1C1"
-                              fontSize="small"
+                <Grid
+                  container
+                  spacing={1}
+                  sx={{
+                    [theme?.breakpoints?.down("lg")]: {
+                      justifyContent: "center",
+                    },
+                  }}
+                >
+                  {data &&
+                    Object?.keys(data?.sprites)?.map(
+                      (elem: any, index: number) => {
+                        return (
+                          data?.sprites[elem] &&
+                          elem !== "other" &&
+                          elem !== "versions" && (
+                            <Grid
+                              item
+                              lg={3}
+                              key={index}
                               sx={{
-                                position: "absolute",
-                                right: 4,
-                                top: 11,
+                                position: "relative",
                               }}
-                            />
-                            <Card sx={{ boxShadow: "none" }}>
-                              <CardActionArea
-                                onClick={() => {
-                                  setDialog({
-                                    open: true,
-                                    selected: {
-                                      img: data?.sprites[elem],
-                                      name: elem,
-                                    },
-                                  });
+                            >
+                              <OpenInFullRounded
+                                htmlColor="#C1C1C1"
+                                fontSize="small"
+                                sx={{
+                                  position: "absolute",
+                                  right: 4,
+                                  top: 11,
                                 }}
-                              >
-                                <img
-                                  src={data?.sprites[elem]}
-                                  alt={`${data?.name}-${elem}`}
-                                />
-                              </CardActionArea>
-                            </Card>
-                          </Grid>
-                        )
-                      );
-                    }
-                  )}
+                              />
+                              <Card sx={{ boxShadow: "none" }}>
+                                <CardActionArea
+                                  onClick={() => {
+                                    setDialog({
+                                      open: true,
+                                      selected: {
+                                        img: data?.sprites[elem],
+                                        name: elem,
+                                      },
+                                    });
+                                  }}
+                                >
+                                  <img
+                                    src={data?.sprites[elem]}
+                                    alt={`${data?.name}-${elem}`}
+                                  />
+                                </CardActionArea>
+                              </Card>
+                            </Grid>
+                          )
+                        );
+                      }
+                    )}
                 </Grid>
               </CardContent>
             </Card>
           </DivFlex>
         </Grid>
         <Grid item xs={12} lg={8}>
+          (
           <Card style={{ width: "-webkit-fill-available" }}>
             <CardContent sx={{ padding: "24px" }}>
-              <Title style={{ textTransform: "uppercase", fontSize: "32px" }}>
-                {data?.name}
+              <Title
+                sx={{
+                  textTransform: "uppercase",
+                  fontSize: "32px",
+                  [theme?.breakpoints?.down("lg")]: {
+                    textAlign: "center",
+                    marginTop: 0,
+                  },
+                }}
+              >
+                {mobile ? "Traits" : data?.name}
               </Title>
               <Title
                 style={{
@@ -273,6 +321,7 @@ const PokeDescription = (props: IProps) => {
               <Title
                 style={{
                   fontSize: "24px",
+                  marginBottom: "16px",
                 }}
               >
                 Stats
@@ -284,11 +333,11 @@ const PokeDescription = (props: IProps) => {
                       <Title
                         style={{
                           fontSize: "16px",
-                          margin: 0,
+                          margin: "4px 0",
                           textTransform: "capitalize",
                         }}
                       >
-                        {stat?.stat?.name}
+                        {stat?.stat?.name}: {stat?.base_stat}
                       </Title>
                       <LinearProgress
                         sx={{
@@ -340,6 +389,7 @@ const PokeDescription = (props: IProps) => {
               </Title>
             </CardContent>
           </Card>
+          )
         </Grid>
       </Grid>
       <Dialog

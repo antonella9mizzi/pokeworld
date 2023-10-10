@@ -98,7 +98,7 @@ const MPokeDescription = () => {
   };
   const Container = styled("div")(({ theme }) => ({
     padding: "3% 5%",
-
+    minHeight: "100vh",
     backgroundColor: theme?.palette?.primary?.dark,
     [theme.breakpoints.down("md")]: {
       padding: "3% 32px",
@@ -109,11 +109,7 @@ const MPokeDescription = () => {
   }, [id]);
   return (
     <Container>
-      {!loading && data ? (
-        <PokeDescription data={data} />
-      ) : (
-        <div>...loading</div>
-      )}
+      {!loading && data ? <PokeDescription data={data} /> : <>...loading</>}
     </Container>
   );
 };
