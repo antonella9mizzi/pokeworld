@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PokeDescription from "../components/PokeDescription";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addPokemons } from "../redux/pokemonSlice";
 import { styled } from "@mui/system";
@@ -22,7 +22,7 @@ const MPokeDescription = () => {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
-
+  const location = useLocation();
   const pokemons = useSelector((state: any) => state.Pokemons);
   const getAdditionalData = async () => {
     setLoading(true);
@@ -114,6 +114,10 @@ const MPokeDescription = () => {
     getAdditionalData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
+  //scrolls to top to avoid remaining in same position after clicking a pokemon that was too low on the list
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
   return (
     <Container>
       {!loading && data ? <PokeDescription data={data} /> : <Loading />}
