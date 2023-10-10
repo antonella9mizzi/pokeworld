@@ -52,6 +52,7 @@ const MPokeList = (props: IProps) => {
           display: "flex",
           justifyContent: "center",
           backgroundColor: theme?.palette?.primary?.dark,
+          paddingBottom: "3%",
         }}
       >
         <Button
