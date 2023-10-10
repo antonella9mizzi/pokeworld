@@ -1,5 +1,5 @@
 import React from "react";
-import { styled, useTheme } from "@mui/system";
+import { useTheme } from "@mui/system";
 import {
   Button,
   Card,
@@ -44,6 +44,7 @@ const PokeListItem = (props: IProps) => {
           image={data?.sprites?.front_default}
           alt={data?.name}
           sx={{ height: "100%", objectFit: "contain" }}
+          loading="lazy"
         />
       </CardActionArea>
       <CardContent

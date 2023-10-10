@@ -6,6 +6,17 @@ import { useDispatch } from "react-redux";
 import { addPokemons } from "../redux/pokemonSlice";
 import { styled } from "@mui/system";
 
+import Loading from "../components/Loading";
+
+const Container = styled("div")(({ theme }) => ({
+  padding: "3% 5%",
+  minHeight: "100vh",
+  backgroundColor: theme?.palette?.primary?.dark,
+  [theme.breakpoints.down("md")]: {
+    padding: "3% 32px",
+  },
+}));
+
 const MPokeDescription = () => {
   const { id } = useParams();
   const [data, setData] = useState<any>(null);
@@ -88,28 +99,24 @@ const MPokeDescription = () => {
         evolution_chain: [...superEvolution],
       };
 
-      // Update the component's local state with the new data.
-      setData(_newData);
-      setLoading(false); // Set loading state to false as data fetching is complete.
+      //sets data
+      setTimeout(() => {
+        setLoading(false); // set loading state to false after a minimum delay so it doesnt disturb animation
+        setData(_newData);
+      }, 900);
     } catch (error) {
       console.error("Error fetching data:", error); // Handle and log any errors.
       setLoading(false); // Set loading state to false in case of an error.
     }
   };
-  const Container = styled("div")(({ theme }) => ({
-    padding: "3% 5%",
-    minHeight: "100vh",
-    backgroundColor: theme?.palette?.primary?.dark,
-    [theme.breakpoints.down("md")]: {
-      padding: "3% 32px",
-    },
-  }));
+
   useEffect(() => {
     getAdditionalData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
   return (
     <Container>
-      {!loading && data ? <PokeDescription data={data} /> : <>...loading</>}
+      {!loading && data ? <PokeDescription data={data} /> : <Loading />}
     </Container>
   );
 };

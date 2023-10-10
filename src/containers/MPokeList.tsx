@@ -1,39 +1,26 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
 import { useSelector } from "react-redux";
 import PokeListItem from "../components/PokeListItem";
-import { Box, Button, Grid } from "@mui/material";
-import { darken, styled, useTheme } from "@mui/system";
+import { Button, Grid } from "@mui/material";
+import { useTheme } from "@mui/system";
 import { getContrastFromHex } from "../utils/utils";
+import Loading from "../components/Loading";
 
 type IProps = {
-  loading: boolean;
-  setLoading: Function;
-  reachedEnd: boolean;
-  setReachedEnd: Function;
   updateAllData: Function;
+  loading: boolean;
 };
 
-const ButtonC = styled("button")(({ theme }) => ({}));
 const MPokeList = (props: IProps) => {
-  const { loading, setLoading, updateAllData } = props;
+  const { updateAllData, loading } = props;
   const pokemons = useSelector((state: any) => state.Pokemons);
   const containerRef = useRef<any>(null);
   const theme = useTheme();
   const handleLoadMore = () => {
-    if (loading) {
-      return;
-    }
-    setLoading(true);
-
     // Fetch more data using the fetchMoreData function
-    updateAllData(pokemons.length, 16)
-      .then(() => {
-        setLoading(false);
-      })
-      .catch((error: any) => {
-        console.error("Error fetching more data:", error);
-        setLoading(false);
-      });
+    updateAllData(pokemons.length, 16).catch((error: any) => {
+      console.error("Error fetching more data:", error);
+    });
   };
 
   return (
@@ -42,14 +29,22 @@ const MPokeList = (props: IProps) => {
         ref={containerRef}
         style={{ backgroundColor: theme?.palette?.primary?.dark }}
       >
-        <Grid container spacing={2} sx={{ padding: "3% 5%" }}>
-          {pokemons.map((pokemon: any, index: number) => {
-            return (
-              <Grid item xs={6} md={3} key={index}>
-                <PokeListItem data={pokemon} />
-              </Grid>
-            );
-          })}
+        <Grid
+          container
+          spacing={2}
+          sx={{ padding: "3% 5%", minHeight: "100vh" }}
+        >
+          {!loading && pokemons ? (
+            pokemons.map((pokemon: any, index: number) => {
+              return (
+                <Grid item xs={6} md={3} key={index}>
+                  <PokeListItem data={pokemon} />
+                </Grid>
+              );
+            })
+          ) : (
+            <Loading />
+          )}
         </Grid>
       </div>
       <div

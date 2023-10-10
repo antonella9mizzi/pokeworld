@@ -7,7 +7,6 @@ import {
   Grid,
   IconButton,
   LinearProgress,
-  Skeleton,
   useMediaQuery,
 } from "@mui/material";
 import { darken, styled, useTheme } from "@mui/system";
@@ -34,6 +33,7 @@ const MainImg = styled("img")(({ theme }) => ({
   borderRadius: "50%",
   [theme.breakpoints.down("lg")]: {
     width: "100%",
+    maxWidth: "300px",
   },
 }));
 
@@ -59,6 +59,7 @@ const MainImgXS = styled("img")(({ theme }) => ({
   backgroundColor: "#F2F2F2",
   borderRadius: "50%",
   [theme.breakpoints.down("lg")]: {
+    maxWidth: "150px",
     width: "50%",
   },
 }));
@@ -121,7 +122,7 @@ const PokeDescription = (props: IProps) => {
 
   return (
     <>
-      <Grid container spacing={3}>
+      <Grid container spacing={3} sx={{ alignItems: "flex-end" }}>
         <Grid item xs={12} lg={4}>
           <DivFlex
             style={{
@@ -168,6 +169,7 @@ const PokeDescription = (props: IProps) => {
                       <Grid
                         item
                         xs={12}
+                        sm={4}
                         lg={4}
                         key={index}
                         onClick={() => {
@@ -278,7 +280,6 @@ const PokeDescription = (props: IProps) => {
           </DivFlex>
         </Grid>
         <Grid item xs={12} lg={8}>
-          (
           <Card style={{ width: "-webkit-fill-available" }}>
             <CardContent sx={{ padding: "24px" }}>
               <Title
@@ -389,7 +390,6 @@ const PokeDescription = (props: IProps) => {
               </Title>
             </CardContent>
           </Card>
-          )
         </Grid>
       </Grid>
       <Dialog

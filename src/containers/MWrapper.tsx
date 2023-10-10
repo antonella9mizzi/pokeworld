@@ -4,10 +4,11 @@ import MPokeList from "./MPokeList";
 import MPokeDescription from "./MPokeDescription";
 import { useDispatch } from "react-redux";
 import { addPokemons } from "../redux/pokemonSlice";
+import Footer from "../components/Footer";
+import Header from "../components/Header";
 const MWrapper = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState<boolean>(false);
-  const [reachedEnd, setReachedEnd] = useState<boolean>(false);
 
   const getDetails = (pokemonUrl: string) => {
     fetch(pokemonUrl)
@@ -46,6 +47,7 @@ const MWrapper = () => {
     });
   };
   const getAllData = () => {
+    setLoading(true);
     fetch("https://pokeapi.co/api/v2/pokemon?limit=16&offset=0")
       .then((response) => response.json())
       .then((data) => {
@@ -55,6 +57,7 @@ const MWrapper = () => {
         // Fetch data for each Pokemon URL
         Promise.all(pokemonUrls.map(getDetails))
           .then(() => {
+            setLoading(false);
             // All Pokemon data is fetched and dispatched
             console.log("All Pokemon data fetched and dispatched.");
           })
@@ -74,22 +77,17 @@ const MWrapper = () => {
 
   return (
     <>
+      <Header />
       <Switch>
         <Route
           path="/"
           element={
-            <MPokeList
-              loading={loading}
-              setLoading={setLoading}
-              reachedEnd={reachedEnd}
-              setReachedEnd={setReachedEnd}
-              updateAllData={updateAllData}
-            />
+            <MPokeList updateAllData={updateAllData} loading={loading} />
           }
         />
         <Route path="/pokemon/:id" element={<MPokeDescription />} />
       </Switch>
-      <footer style={{ height: "5vh", width: "100%" }}></footer>
+      <Footer />
     </>
   );
 };
