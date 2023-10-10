@@ -9,10 +9,10 @@ const ThemeContainer = (props: any) => {
   const theme = createTheme({
     palette: {
       primary: {
-        main: "#00126b",
+        main: "#3B5CA7",
       },
       secondary: {
-        main: "#ff1f48",
+        main: "#FFCB05",
       },
       text: { primary: "#121212" },
       background: { default: "#edeef1" },

@@ -67,13 +67,16 @@ const PokeListItem = (props: IProps) => {
 
         <Button
           size="small"
-          color="primary"
-          variant="outlined"
+          color="secondary"
+          variant="contained"
           onClick={() => {
             navigate(`pokemon/${data?.id}`);
           }}
+          sx={{
+            borderRadius: 12,
+          }}
         >
-          <AddRounded /> See more
+          <AddRounded /> details
         </Button>
       </CardContent>
     </Card>

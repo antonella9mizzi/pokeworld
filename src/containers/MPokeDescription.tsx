@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addPokemons } from "../redux/pokemonSlice";
+import { styled } from "@mui/system";
 
 const MPokeDescription = () => {
   const { id } = useParams();
@@ -95,18 +96,25 @@ const MPokeDescription = () => {
       setLoading(false); // Set loading state to false in case of an error.
     }
   };
+  const Container = styled("div")(({ theme }) => ({
+    padding: "3% 5%",
 
+    backgroundColor: theme?.palette?.primary?.dark,
+    [theme.breakpoints.down("md")]: {
+      padding: "3% 32px",
+    },
+  }));
   useEffect(() => {
     getAdditionalData();
   }, [id]);
   return (
-    <div>
+    <Container>
       {!loading && data ? (
         <PokeDescription data={data} />
       ) : (
         <div>...loading</div>
       )}
-    </div>
+    </Container>
   );
 };
 

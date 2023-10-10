@@ -73,21 +73,24 @@ const MWrapper = () => {
   }, []);
 
   return (
-    <Switch>
-      <Route
-        path="/"
-        element={
-          <MPokeList
-            loading={loading}
-            setLoading={setLoading}
-            reachedEnd={reachedEnd}
-            setReachedEnd={setReachedEnd}
-            updateAllData={updateAllData}
-          />
-        }
-      />
-      <Route path="/pokemon/:id" element={<MPokeDescription />} />
-    </Switch>
+    <>
+      <Switch>
+        <Route
+          path="/"
+          element={
+            <MPokeList
+              loading={loading}
+              setLoading={setLoading}
+              reachedEnd={reachedEnd}
+              setReachedEnd={setReachedEnd}
+              updateAllData={updateAllData}
+            />
+          }
+        />
+        <Route path="/pokemon/:id" element={<MPokeDescription />} />
+      </Switch>
+      <footer style={{ height: "5vh", width: "100%" }}></footer>
+    </>
   );
 };
 
